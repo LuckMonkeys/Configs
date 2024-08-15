@@ -1,0 +1,51 @@
+# unbind default prefix and set it to ctrl-a
+unbind C-b
+set -g prefix C-a
+bind C-a send-prefix
+
+#### key bindings ####
+
+# reload config file
+bind r source-file ~/.tmux.conf \; display ".tmux.conf reloaded!"
+
+# vertical split (prefix -)
+unbind '"'
+bind - splitw -v
+# horizontal split (prefix |)
+unbind %
+bind | splitw -h
+
+# pane movement shortcuts (same as vim)
+bind h select-pane -L
+bind j select-pane -D
+bind k select-pane -U
+bind l select-pane -R
+
+# enable mouse support for switching panes/windows
+set -g mouse on
+
+#### copy mode : vim ####
+
+# set vi mode for copy mode
+setw -g mode-keys vi
+
+# start selection with 'v' and copy using 'y'
+# select (v)
+bind -Tcopy-mode-vi v send -X begin-selection
+# copy (y)
+bind -Tcopy-mode-vi y send -X copy-selection
+
+# paste using 'p'
+#unbind p
+#bind p paste-buffer
+
+#### color ####
+set -g default-terminal screen-256color
+set-option -ga terminal-overrides ",*256col*:Tc"
+
+# prevent auto rename
+set-option -g allow-rename off
+
+#{?client_prefix,PREFIX,}
+set -g status-left "#{?client_prefix,#[bg=blue]PREFIX,}"
+#set -g status-style bg=default
