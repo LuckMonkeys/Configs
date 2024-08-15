@@ -1,0 +1,140 @@
+[
+    {
+        "key": "alt+s",
+        "command": "latex-workshop.synctex",
+        "when": "editorTextFocus && !isMac"
+    },
+    {
+        "key": "alt+i",
+        "command": "latex-workshop.build",
+        "when": "editorTextFocus && !isMac"
+    },
+    {
+        "key": "alt+t",
+        "command": "latex-workshop.kill",
+        "when": "editorTextFocus && !isMac"
+    },
+    {
+        "key": "alt+e",
+        "command": "latex-workshop.recipes"
+    },
+    
+    // {
+    //     "key": "ctrl+h",
+    //     "command": "workbench.action.focusSideBar"
+    // },
+
+    // {
+    //     "key": "ctrl+l",
+    //     "command": "workbench.action.focusFirstEditorGroup"
+    // },
+
+    // {
+    //     "key": "ctrl+0",
+    //     "command": "workbench.action.focusActiveEditorGroup"
+    // },
+    // {
+    //     "key": "ctrl+0",
+    //     "command": "-workbench.action.focusSideBar"
+    // },
+    // {
+    //     "key": "ctrl+1",
+    //     "command": "-workbench.action.focusFirstEditorGroup"
+    // },
+    // {
+    //     "key": "ctrl+1",
+    //     "command": "workbench.view.explorer",
+    //     "when": "viewContainer.workbench.view.explorer.enabled"
+    // },
+    // {
+    //     "key": "ctrl+l",
+    //     "command": "-expandLineSelection",
+    //     "when": "textInputFocus"
+    // }
+    
+    // move focus
+    {
+        "key": "alt+h",
+        "command": "workbench.action.focusSideBar"
+    },
+    {
+        "key": "alt+l",
+        "command": "workbench.action.focusActiveEditorGroup"
+    },
+    {
+        "key": "alt+j",
+        "command": "workbench.action.focusPanel"
+    },
+    {
+        "key": "alt+k",
+        "command": "workbench.action.focusActiveEditorGroup"
+    },
+
+    {
+     "command": "vscode-neovim.send",
+     "key": "ctrl+n",
+     "when": "editorTextFocus && neovim.init && neovim.mode == normal",
+     "args": "<C-n>"
+    },
+
+    {
+     "command": "vscode-neovim.send",
+     "key": "ctrl+c",
+     "when": "editorTextFocus && neovim.mode == visual",
+     "args": "<C-c>"
+    },
+    // {
+    //  "command": "-vscode-neovim.send",
+    //  "key": "ctrl+c",
+    //  "when": "editorTextFocus && neovim.init && neovim.mode == visual",
+    // },
+    
+    // {
+    //     "command": "vscode-neovim.compositeEscape1",
+    //     "key": "j",
+    //     "when": "neovim.mode == insert && editorTextFocus",
+    //     "args": "j"
+    // },
+
+    // {
+    //     "command": "vscode-neovim.compositeEscape2",
+    //     "key": "k",
+    //     "when": "neovim.mode == insert && editorTextFocus",
+    //     "args": "k"
+    // },
+    {
+        "key": "ctrl+shift+e",
+        "command": "-workbench.view.explorer",
+        "when": "viewContainer.workbench.view.explorer.enabled"
+    },
+    {
+        "key": "alt+oem_3",
+        "command": "workbench.action.terminal.toggleTerminal",
+        "when": "terminal.active"
+    },
+    {
+        "key": "ctrl+oem_3",
+        "command": "-workbench.action.terminal.toggleTerminal",
+        "when": "terminal.active"
+    },
+    {
+        "key": "ctrl+shift+x",
+        "command": "copyRelativeFilePath",
+        "when": "!editorFocus"
+    },
+    {
+        "key": "ctrl+k ctrl+shift+c",
+        "command": "-copyRelativeFilePath",
+        "when": "!editorFocus"
+    },
+    {
+        "key": "ctrl+shift+x",
+        "command": "copyRelativeFilePath",
+        "when": "editorFocus"
+    },
+    {
+        "key": "ctrl+k ctrl+shift+c",
+        "command": "-copyRelativeFilePath",
+        "when": "editorFocus"
+    },
+]
