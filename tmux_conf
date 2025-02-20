@@ -1,4 +1,3 @@
-# unbind default prefix and set it to ctrl-a
 unbind C-b
 set -g prefix C-a
 bind C-a send-prefix
@@ -36,8 +35,8 @@ bind -Tcopy-mode-vi v send -X begin-selection
 bind -Tcopy-mode-vi y send -X copy-selection
 
 # paste using 'p'
-#unbind p
-#bind p paste-buffer
+# unbind p
+# bind p paste-buffer
 
 #### color ####
 set -g default-terminal screen-256color
@@ -46,6 +45,18 @@ set-option -ga terminal-overrides ",*256col*:Tc"
 # prevent auto rename
 set-option -g allow-rename off
 
-#{?client_prefix,PREFIX,}
+# Merged color settings from the first config
+set -g status-position bottom
+set -g status-bg colour234
+set -g status-fg colour137
 set -g status-left "#{?client_prefix,#[bg=blue]PREFIX,}"
-#set -g status-style bg=default
+set -g status-right '#[fg=colour233,bg=colour241,bold] %d/%m #[fg=colour233,bg=colour245,bold] %H:%M:%S '
+set -g status-right-length 50
+set -g status-left-length 20
+
+setw -g window-status-current-format ' #I#[fg=colour250]:#[fg=colour255]#W#[fg=colour50]#F '
+setw -g window-status-format ' #I#[fg=colour237]:#[fg=colour250]#W#[fg=colour244]#F '
+
+set-option -g history-limit 5000
+
+run-shell ~/clone/path/resurrect.tmux
