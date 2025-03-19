@@ -524,5 +524,14 @@
 },
 "editor.accessibilitySupport": "off",
 "github.copilot.editor.enableAutoCompletions": true,
-"interactiveWindow.executeWithShiftEnter": true
+"interactiveWindow.executeWithShiftEnter": true,
+
+"remote.SSH.localServerDownload": "always",
+    
+"workbench.view.showQuietly": {
+    "workbench.panel.output": true
+  }
+
+
+
 }
