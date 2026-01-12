@@ -1,62 +1,210 @@
+# ============================================
+# 定制 tmux 配置
+# 基于 vim 风格，集成会话管理和系统剪贴板
+# ============================================
+
+# ============================================
+# 基础设置
+# ============================================
+
+# 设置 Prefix 键为 C-a
 unbind C-b
 set -g prefix C-a
 bind C-a send-prefix
 
-#### key bindings ####
+# 鼠标支持
+set -g mouse on
 
-# reload config file
-bind r source-file ~/.tmux.conf \; display ".tmux.conf reloaded!"
+# 设置终端类型，支持 True Color
+set -g default-terminal "tmux-256color"
+set -as terminal-features ",*256col*:RGB"
+set -as terminal-overrides ",*256col*:Tc"
 
-# vertical split (prefix -)
+# 快速响应
+set -s escape-time 0
+set -sg repeat-time 300
+
+# 历史记录行数
+set -g history-limit 10000
+
+# 窗口和 Pane 编号从 1 开始
+set -g base-index 1
+setw -g pane-base-index 1
+
+# 自动重命名窗口
+setw -g automatic-rename on
+set -g renumber-windows on
+
+# 设置终端标题
+set -g set-titles on
+
+# 显示时间
+set -g display-panes-time 2000
+set -g display-time 2000
+
+# 活动监控
+set -g visual-activity off
+setw -g monitor-activity off
+setw -g monitor-bell off
+
+# 焦点事件
+set -s focus-events on
+
+# UTF-8 支持（旧版本 tmux）
+set -q -g status-utf8 on
+setw -q -g utf8 on
+
+# ============================================
+# 重载配置
+# ============================================
+bind r source-file ~/.tmux.conf \; display '~/.tmux.conf reloaded!'
+
+# ============================================
+# 会话管理
+# ============================================
+
+# 新建会话
+bind C-c new-session
+
+# 重命名会话
+bind . command-prompt -p "Rename session:" "rename-session '%%'"
+
+# 重命名窗口
+unbind ,
+bind , command-prompt -p "Rename window:" "rename-window '%%'"
+
+# 会话切换 (Prefix + Ctrl-n/Ctrl-p)
+bind C-n switch-client -n
+bind C-p switch-client -p
+
+# ============================================
+# 窗口管理
+# ============================================
+
+# 新建窗口（在当前路径）
+bind c new-window -c "#{pane_current_path}"
+
+# 分屏 (vim 风格: | 横向, - 纵向)
 unbind '"'
-bind - splitw -v
-# horizontal split (prefix |)
 unbind %
-bind | splitw -h
+bind | split-window -h -c "#{pane_current_path}"
+bind - split-window -v -c "#{pane_current_path}"
 
-# pane movement shortcuts (same as vim)
+# 窗口切换 (Prefix + n/p)
+unbind n
+unbind p
+bind -r n next-window
+bind -r p previous-window
+
+# 粘贴改用 Prefix + P (大写)
+bind P paste-buffer
+
+# 快速切换窗口 (Alt-数字)
+bind -n M-1 select-window -t 1
+bind -n M-2 select-window -t 2
+bind -n M-3 select-window -t 3
+bind -n M-4 select-window -t 4
+bind -n M-5 select-window -t 5
+bind -n M-6 select-window -t 6
+bind -n M-7 select-window -t 7
+bind -n M-8 select-window -t 8
+bind -n M-9 select-window -t 9
+
+# ============================================
+# Pane 导航 (vim 风格)
+# ============================================
+
+# 选择 pane (vim 风格: h/j/k/l)
 bind h select-pane -L
 bind j select-pane -D
 bind k select-pane -U
 bind l select-pane -R
 
-# enable mouse support for switching panes/windows
-set -g mouse on
+# 调整 pane 大小 (大写: H/J/K/L)
+bind -r H resize-pane -L 5
+bind -r J resize-pane -D 5
+bind -r K resize-pane -U 5
+bind -r L resize-pane -R 5
 
-#### copy mode : vim ####
+# 最大化/还原 pane
+bind z resize-pane -Z
 
-# set vi mode for copy mode
-setw -g mode-keys vi
+# 交换 pane
+bind > swap-pane -D
+bind < swap-pane -U
 
-# start selection with 'v' and copy using 'y'
-# select (v)
-bind -Tcopy-mode-vi v send -X begin-selection
-# copy (y)
-bind -Tcopy-mode-vi y send -X copy-selection
+# ============================================
+# 复制模式 (vi 风格 + 系统剪贴板集成)
+# ============================================
 
-# paste using 'p'
-# unbind p
-# bind p paste-buffer
+# 设置为 vi 模式
+set -g status-keys emacs
+set -g mode-keys vi
 
-#### color ####
-set -g default-terminal screen-256color
-set-option -ga terminal-overrides ",*256col*:Tc"
+# 进入复制模式
+bind [ copy-mode
 
-# prevent auto rename
-set-option -g allow-rename off
+# vi 模式键绑定
+bind -T copy-mode-vi v send-keys -X begin-selection
+bind -T copy-mode-vi C-v send-keys -X rectangle-toggle
+bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "~/.config/tmux/scripts/copy_to_clipboard.sh"
+bind -T copy-mode-vi Y send-keys -X copy-end-of-line
 
-# Merged color settings from the first config
+# 退出复制模式 (q 或 Escape)
+bind -T copy-mode-vi q send-keys -X cancel
+bind -T copy-mode-vi Escape send-keys -X cancel
+
+# 粘贴
+bind ] run-shell "~/.config/tmux/scripts/paste_from_clipboard.sh"
+bind p paste-buffer
+
+# 列出缓冲区
+bind b list-buffers
+
+# 滚动
+bind -T copy-mode-vi C-u send-keys -N 5 -X scroll-up
+bind -T copy-mode-vi C-d send-keys -N 5 -X scroll-down
+
+# ============================================
+# 状态栏配置
+# ============================================
+
+# 状态栏位置
 set -g status-position bottom
-set -g status-bg colour234
+
+# 状态栏样式
+set -g status-bg black
 set -g status-fg colour137
-set -g status-left "#{?client_prefix,#[bg=blue]PREFIX,}"
-set -g status-right '#[fg=colour233,bg=colour241,bold] %d/%m #[fg=colour233,bg=colour245,bold] %H:%M:%S '
+set -g status-justify left
+
+# 状态栏长度
+set -g status-left-length 90
 set -g status-right-length 50
-set -g status-left-length 20
 
-setw -g window-status-current-format ' #I#[fg=colour250]:#[fg=colour255]#W#[fg=colour50]#F '
-setw -g window-status-format ' #I#[fg=colour237]:#[fg=colour250]#W#[fg=colour244]#F '
+# 左侧：Prefix 提示 + 会话标签栏
+set -g status-left "#{?client_prefix,#[bg=blue#,fg=white#,bold] PREFIX #[default] ,}#(~/.config/tmux/tmux-status/left.sh '#{session_id}' '#{session_name}')   "
 
-set-option -g history-limit 5000
+# 右侧：主机名（简化版）
+set -g status-right "#(~/.config/tmux/tmux-status/right.sh)"
 
-#run-shell ~/clone/path/resurrect.tmux
+# 窗口列表格式
+setw -g window-status-separator ''
+setw -g window-status-format '#[fg=#c5c8c6] #I:#W '
+setw -g window-status-current-format '#[fg=#b294bb,bold] #I:#W '
+setw -g window-status-activity-style bg=black
+setw -g window-status-bell-style bg=black
+
+# Pane 边框样式
+set -g pane-border-style fg=colour244
+set -g pane-active-border-style fg=#b294bb
+
+# ============================================
+# 其他实用功能
+# ============================================
+
+# 同步输入切换（在所有 pane 中同时输入）
+bind C-g setw synchronize-panes \; display "synchronize-panes #{?pane_synchronized,on,off}"
+
+# 选择窗口/会话树
+bind w choose-tree -Zw
+bind s choose-tree -Zs
